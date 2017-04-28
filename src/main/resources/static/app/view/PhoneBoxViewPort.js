@@ -14,9 +14,26 @@ Ext.define('PhoneBox.view.PhoneBoxViewPort', {
             items: [
                 {
                     type:'grid',
-                    width:800,
-                    height:400,
-                    title:'test'
+                    width:'40%',
+                    height:'90%',
+                    title:'电话联系人',
+                    tbar: [
+                        {
+                            xtype: 'button',
+                            text:'添加'
+                        },{
+                            xtype: 'button',
+                            text:'修改'
+                        },{
+                            xtype: 'button',
+                            text:'删除'
+                        },
+                        '->',
+                        {
+                            xtype: 'button',
+                            text:'查询'
+                        }
+                    ]
                 }
             ]
         });
