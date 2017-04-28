@@ -14,8 +14,8 @@ Ext.define('PhoneBox.view.PhoneBoxViewPort', {
             items: [
                 {
                     type:'grid',
-                    width:'40%',
-                    height:'90%',
+                    width:'30%',
+                    height:'80%',
                     title:'电话联系人',
                     tbar: [
                         {
