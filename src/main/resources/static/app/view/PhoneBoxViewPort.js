@@ -10,13 +10,32 @@ Ext.define('PhoneBox.view.PhoneBoxViewPort', {
     initComponent: function () {
         var me = this;
 
+        var linkmanStore = Ext.create('Ext.data.Store', {
+            fields:["name"],
+            proxy: {
+                type: 'ajax',
+                url: 'listLinkman',
+                reader: {
+                    type: 'json'
+                }
+            },
+            autoLoad: true
+        });
+
         Ext.applyIf(me, {
             items: [
                 {
-                    type:'grid',
+                    xtype:'grid',
                     width:'30%',
                     height:'80%',
                     title:'电话联系人',
+                    store:linkmanStore,
+                    columns: [
+                        {header: '姓名', width:'120',dataIndex: 'name'},
+                        {header: '公司', width:'200',dataIndex: 'company'},
+                        {header:'职位',dataIndex:'title',flex:1},
+                        {header:'电话号码',dataIndex:'phoneNo',flex:1}
+                    ],
                     tbar: [
                         {
                             xtype: 'button',
