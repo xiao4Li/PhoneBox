@@ -11,7 +11,7 @@ public class LinkmanPo {
     private String company;
     private String title;
     private String phoneNo;
-    private Integer id;
+    private Integer linkmanId;
 
     public String getName() {
         return name;
@@ -45,11 +45,11 @@ public class LinkmanPo {
         this.phoneNo = phoneNo;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getLinkmanId() {
+        return linkmanId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setLinkmanId(Integer linkmanId) {
+        this.linkmanId = linkmanId;
     }
 }

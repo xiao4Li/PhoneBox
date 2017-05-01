@@ -17,4 +17,10 @@ public interface DataLoader<T> {
     int addData(T item);
 
     T getDataById(Integer id);
+
+    int updateLinkman(T item);
+
+
+    int delLinkmanByIds(List<Integer> ids);
+    Integer getMaxId();
 }

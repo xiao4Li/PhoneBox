@@ -1,5 +1,6 @@
 package com.sample.bruce.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.sample.bruce.loader.DataLoader;
 import com.sample.bruce.loader.impl.JsonDataLoaderImpl;
 import com.sample.bruce.po.LinkmanPo;
@@ -24,6 +25,7 @@ import java.util.List;
 @Controller
 public class SampleController {
     private DataLoader<LinkmanPo> dataLoader = new JsonDataLoaderImpl();
+
     @RequestMapping("/")
     String index(){
         //return new ModelAndView("index");
@@ -39,15 +41,34 @@ public class SampleController {
     @RequestMapping("/addLinkman")
     @ResponseBody
     List<LinkmanPo> addLinkman(LinkmanPo linkmanPo){
-        dataLoader.addData(dataLoader.listData().get(0));
+        linkmanPo.setLinkmanId(dataLoader.getMaxId());
+        dataLoader.addData(linkmanPo);
         return dataLoader.listData();
     }
+
+    @RequestMapping("/updateLinkman")
+    @ResponseBody
+    List<LinkmanPo> updateLinkman(LinkmanPo linkmanPo){
+        dataLoader.updateLinkman(linkmanPo);
+        return dataLoader.listData();
+    }
+
+
 
     @RequestMapping("/getLinkmanById")
     @ResponseBody
     LinkmanPo getLinkmanById(Integer id){
         return dataLoader.getDataById(id);
     }
+
+    @RequestMapping("/delLinkmanByIds")
+    @ResponseBody
+    int delLinkmanByIds(String ids){
+        List<Integer> idsList = JSON.parseArray(ids,Integer.class);
+        return dataLoader.delLinkmanByIds(idsList);
+    }
+
+
 
 
 

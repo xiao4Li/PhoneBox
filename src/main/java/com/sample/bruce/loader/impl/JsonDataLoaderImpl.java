@@ -1,12 +1,15 @@
 package com.sample.bruce.loader.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.sample.bruce.Utils;
 import com.sample.bruce.loader.DataLoader;
 import com.sample.bruce.po.LinkmanPo;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import sun.awt.image.ImageWatched;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +24,15 @@ import java.util.List;
 @Controller("jsonDataLoaderImpl")
 public class JsonDataLoaderImpl implements DataLoader<LinkmanPo> {
     public static final String FILE_NAME = "linkman.json";
-    private List<LinkmanPo> cache;
+    private static List<LinkmanPo> cache;
+    private Integer maxId;
+
+    public JsonDataLoaderImpl(){
+        super();
+        this.load();
+        maxId = Utils.getMaxId(this.listData());
+    }
+
     private List<LinkmanPo>   load(boolean refresh)   {
         List<LinkmanPo> data = null;
         synchronized(this){
@@ -44,6 +55,13 @@ public class JsonDataLoaderImpl implements DataLoader<LinkmanPo> {
             }
         }
         return data;
+    }
+
+    public Integer getMaxId(){
+        synchronized (maxId){
+            this.maxId = this.maxId + 1;
+        }
+        return  this.maxId;
     }
 
     private List<LinkmanPo>   load()   {
@@ -84,11 +102,43 @@ public class JsonDataLoaderImpl implements DataLoader<LinkmanPo> {
     public LinkmanPo getDataById(Integer id) {
         LinkmanPo linkmanPo = null;
         for (LinkmanPo item : this.cache){
-            if(id.equals(item.getId())){
+            if(id.equals(item.getLinkmanId())){
                 linkmanPo = item;
                 break;
             }
         }
         return linkmanPo;
+    }
+
+    @Override
+    public int updateLinkman(LinkmanPo item) {
+        for (LinkmanPo linkmanPo : this.cache){
+            if (linkmanPo.getLinkmanId().equals(item.getLinkmanId())){
+                linkmanPo.setName(item.getName());
+                linkmanPo.setCompany(item.getCompany());
+                linkmanPo.setTitle(item.getTitle());
+                linkmanPo.setPhoneNo(item.getPhoneNo());
+            }
+        }
+        String jsonString = JSON.toJSONString(this.cache);
+        writeDataToDisc(jsonString);
+        return 1;
+    }
+
+    @Override
+    public int delLinkmanByIds(List<Integer> ids) {
+        List<LinkmanPo> delList = new ArrayList<>();
+        synchronized (this){
+            for(LinkmanPo item : this.cache){
+                if(ids.contains(item.getLinkmanId())){
+                    delList.add(item);
+                }
+            }
+
+            this.cache.removeAll(delList);
+        }
+        String jsonString = JSON.toJSONString(this.cache);
+        writeDataToDisc(jsonString);
+        return delList.size();
     }
 }
