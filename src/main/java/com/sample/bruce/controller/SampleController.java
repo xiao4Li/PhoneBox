@@ -1,12 +1,16 @@
 package com.sample.bruce.controller;
 
+import com.sample.bruce.loader.DataLoader;
+import com.sample.bruce.loader.impl.JsonDataLoaderImpl;
 import com.sample.bruce.po.LinkmanPo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 @EnableAutoConfiguration
 @Controller
 public class SampleController {
+    private DataLoader<LinkmanPo> dataLoader = new JsonDataLoaderImpl();
     @RequestMapping("/")
     String index(){
         //return new ModelAndView("index");
@@ -28,18 +33,23 @@ public class SampleController {
     @RequestMapping("/listLinkman")
     @ResponseBody
     List<LinkmanPo> listLinkman(){
-        List<LinkmanPo> list = new ArrayList<LinkmanPo>();
-
-        LinkmanPo item1 = new LinkmanPo();
-        item1.setCompany("test");
-        item1.setId(100);
-        item1.setName("zhagnsan");
-        item1.setPhoneNo("15288123");
-        item1.setTitle("软件工程师");
-
-        list.add(item1);
-        return list;
+        return dataLoader.listData();
     }
+
+    @RequestMapping("/addLinkman")
+    @ResponseBody
+    List<LinkmanPo> addLinkman(LinkmanPo linkmanPo){
+        dataLoader.addData(dataLoader.listData().get(0));
+        return dataLoader.listData();
+    }
+
+    @RequestMapping("/getLinkmanById")
+    @ResponseBody
+    LinkmanPo getLinkmanById(Integer id){
+        return dataLoader.getDataById(id);
+    }
+
+
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(SampleController.class, args);
